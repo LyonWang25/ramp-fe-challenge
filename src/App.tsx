@@ -62,6 +62,7 @@ export function App() {
         <hr className="RampBreak--l" />
 
         <InputSelect<Employee>
+          // Bu5(part 2):already fixed as well
           isLoading={employeeUtils.loading}
           defaultValue={EMPTY_EMPLOYEE}
           items={employees === null ? [] : [EMPTY_EMPLOYEE, ...employees]}
