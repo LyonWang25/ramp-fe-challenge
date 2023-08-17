@@ -10,8 +10,11 @@ import { Employee } from './utils/types';
 
 export function App() {
   const { data: employees, ...employeeUtils } = useEmployees();
-  const { data: paginatedTransactions, ...paginatedTransactionsUtils } =
-    usePaginatedTransactions();
+  const {
+    hasMore,
+    data: paginatedTransactions,
+    ...paginatedTransactionsUtils
+  } = usePaginatedTransactions();
   const { data: transactionsByEmployee, ...transactionsByEmployeeUtils } =
     useTransactionsByEmployee();
   const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +89,7 @@ export function App() {
         <div className="RampGrid">
           <Transactions transactions={transactions} />
 
-          {transactions !== null && (
+          {transactions !== null && selectedEmployee === null && hasMore && (
             <button
               className="RampButton"
               disabled={paginatedTransactionsUtils.loading}

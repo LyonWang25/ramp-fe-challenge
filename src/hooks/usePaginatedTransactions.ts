@@ -34,5 +34,7 @@ export function usePaginatedTransactions(): PaginatedTransactionsResult {
     setPaginatedTransactions(null)
   }, [])
 
-  return { data: paginatedTransactions, loading, fetchAll, invalidateData }
+  const hasMore = paginatedTransactions?.nextPage !== null;
+
+  return { data: paginatedTransactions, loading, fetchAll, invalidateData, hasMore }
 }
