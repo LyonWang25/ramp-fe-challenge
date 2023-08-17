@@ -9,6 +9,11 @@ import { PaginatedRequestParams, RequestByEmployeeParams, SetTransactionApproval
 const timeout = getTimeout()
 const mockTimeout = 1 * timeout
 
+function getTransactionsForAllEmployees(employees: any[]) {
+  // Combine all transactions for each employee into a single array
+  return employees.flatMap(employee => getTransactionsByEmployee({ employeeId: employee.id }));
+}
+
 export function fakeFetch<TData, TParams extends object = object>(
   endpoint: RegisteredEndpoints,
   params?: TParams
@@ -26,7 +31,7 @@ export function fakeFetch<TData, TParams extends object = object>(
       switch (endpoint) {
         case "employees":
           result = getEmployees() as unknown as TData
-
+          console.log('resultEmployee', result)
           setTimeout(() => {
             mockApiLogger({ data: { endpoint, params, result } })
             resolve(result)
@@ -41,10 +46,18 @@ export function fakeFetch<TData, TParams extends object = object>(
             resolve(result)
           }, mockTimeout * 2.5)
           break
-
+        //Fixed Bug 3: Cannot select All Employees after selecting an employee
         case "transactionsByEmployee":
-          result = getTransactionsByEmployee(params as RequestByEmployeeParams) as unknown as TData
-
+          const requestParams = params as RequestByEmployeeParams;
+          // Check if the ID is empty, which represents "All Employees"
+          if (requestParams.employeeId === "") {
+            // Fetch transactions for all employees
+            const employees = getEmployees(); // Assuming getEmployees returns the list of employees
+            result = getTransactionsForAllEmployees(employees) as unknown as TData;
+          } else {
+            // Fetch transactions by the specific employee
+            result = getTransactionsByEmployee(requestParams) as unknown as TData;
+          }
           setTimeout(() => {
             mockApiLogger({ data: { endpoint, params, result } })
             resolve(result)
