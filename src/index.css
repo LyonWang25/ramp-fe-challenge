@@ -89,10 +89,12 @@ hr.RampBreak--l {
   border-bottom: 1px solid var(--color-text);
   cursor: pointer;
 }
-
+/* Fix Bug 1: Select dropdown doesn't scroll with rest of the page  */
 .RampInputSelect--dropdown-container {
   display: none;
-  position: fixed;
+  position: absolute;
+  top: 100%;
+  left: 0;
   width: 100%;
   max-width: 700px;
   border: 1px solid var(--color-darker-shade);
